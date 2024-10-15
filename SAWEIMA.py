@@ -13,8 +13,13 @@ filenames = os.listdir('E:\\Saweima')
 root = 'E:\\Saweima'
 print("脚本已启动！")
 
+pyautogui.PAUSE=0.02
 
 all_now = [0, 0, 0, 0, 0, 0, 0] 
+
+dayStart = True
+
+
 # 0-2  沙威玛
 # 0 无   
 #1  有（无包装袋，普通）  
@@ -48,12 +53,12 @@ def start_game():
     
 def into_shop():
     pyautogui.moveTo(973, 737, duration=0.15)
-    longclick(0.5)  #进店
+    longclick(0)  #进店
     print("进来")
 
 def start_day():
     pyautogui.moveTo(472, 465, duration=0.15)
-    longclick(0.5)  #开始一天
+    longclick(0)  #开始一天
     print("开始一天")
     
 #
@@ -65,9 +70,9 @@ def get_meat_hand_1():
         pyautogui.moveTo(386, 749, duration=0.15)
         pyautogui.mouseDown()  #拿刀
         time.sleep(0.5)
-        for i in range(100):   #来回切肉
-            pyautogui.moveTo(450, 395, duration=0.03)
-            pyautogui.moveTo(450, 588, duration=0.03)
+        for i in range(25):   #来回切肉
+            pyautogui.moveTo(450, 370, duration=0.1)
+            pyautogui.moveTo(450, 600, duration=0.3)
         pyautogui.mouseUp()
         all_now[3] = 10
     
@@ -78,37 +83,42 @@ def cut_potato_1():       #长按切薯条
     
 def output_potato_1():    #薯条出锅
     print("试图出锅薯条")
-    pyautogui.moveTo(1565, 625, duration=0.1)
-    longclick(0.2)
+    pyautogui.moveTo(1565, 625, duration=0.2)
+    longclick(0)
     
 def get_all_1():
     
-    pyautogui.moveTo(248, 614)  #点人
-    longclick(0.1)
+    pyautogui.moveTo(248, 614,duration=0.2)  #点人
+    longclick(0)
     
+    time.sleep(0.2)
     if(all_now[4] < 3):
         print("黄瓜！")
         pyautogui.moveTo(412, 539)  #黄瓜
         for i in range(10):
-            longclick(0.05)
+            longclick(0)
         all_now[4] = 10
         
     if(all_now[5] < 3):
         print("盐！")
         pyautogui.moveTo(412, 631)  #盐
         for i in range(10):
-            longclick(0.05)
+            longclick(0)
         all_now[5] = 10
         
-    pyautogui.moveTo(248, 614)  #点人恢复
-    longclick(0.1)
+    pyautogui.moveTo(248, 614,duration=0.2)  #点人恢复
+    longclick(0)
     
 def potatochips():
-    output_potato_1()
-    time.sleep(0.5)
-    potato = pyautogui.locateOnScreen('E:\\Saweima\\potato.png', confidence=0.90, region=(1480,574,1647-1480,678-574))
-    if(potato == None):
-        print("没有检测到锅中有薯条！")
+    global dayStart
+    if(dayStart):
+        cut_potato_1()
+        time.sleep(2)
+        dayStart = False
+    potatofinish = pyautogui.locateOnScreen('E:\\Saweima\\potatofinish.png', confidence=0.80, region=(1480,634,1670-1480,789-574))
+    if(potatofinish != None):
+        print("锅中薯条炸制完成！")
+        output_potato_1()
         cut_potato_1()
         
         
@@ -132,39 +142,39 @@ def prepare():
 def make_saweima_pie():
     print("饼皮")
     pyautogui.moveTo(605, 879, duration=0.1)  #饼皮
-    longclick(0.1)
+    longclick(0)
 
 def make_saweima_meat():
     print("肉")
-    pyautogui.moveTo(513, 739)  #肉
+    pyautogui.moveTo(513, 739, duration=0.1)  #肉
     for i in range(3):
-        longclick(0.05)
+        longclick(0)
     all_now[3] -= 1
 
 def make_saweima_cucumber():
     print("黄瓜")
-    pyautogui.moveTo(670, 739)  #黄瓜
+    pyautogui.moveTo(670, 739, duration=0.01)  #黄瓜
     for i in range(3):
-        longclick(0.05)
+        longclick(0)
     all_now[4] -= 1
 
 def make_saweima_salt():
     print("盐")
-    pyautogui.moveTo(829, 739)  #盐
+    pyautogui.moveTo(829, 739, duration=0.01)  #盐
     for i in range(3):
-        longclick(0.05)
+        longclick(0)
     all_now[5] -= 1
 
 def make_saweima_potato():
     print("薯条")
-    pyautogui.moveTo(965, 739)  #薯条
+    pyautogui.moveTo(965, 739, duration=0.01)  #薯条
     for i in range(3):
-        longclick(0.05)
+        longclick(0)
     all_now[6] -= 1
         
 def make_saweima_roll():
     print("卷饼")
-    pyautogui.moveTo(948, 915, duration=0.1)  #卷饼  ??
+    pyautogui.moveTo(948, 915, duration=0.01)  #卷饼  ??
     pyautogui.mouseDown()
     pyautogui.moveTo(948, 728, duration=0.5)
     pyautogui.mouseUp()
@@ -173,9 +183,9 @@ def make_saweima_package():
     for i in range(3):
         if(all_now[i] > 0  and  all_now[i] < 10 ):
             print("第" + str(i+1) + "个沙威玛正在装袋")
-            pyautogui.moveTo(761, 866)  #上包装袋
+            pyautogui.moveTo(761, 866, duration=0.1)  #上包装袋
             pyautogui.mouseDown()
-            pyautogui.moveTo(1156, 818 + i * 50, duration=0.2)
+            pyautogui.moveTo(1156, 818 + i * 50, duration=0.3)
             pyautogui.mouseUp()
             all_now[i] += 10
 
@@ -217,7 +227,7 @@ def drag_saweima(index):
         if(all_now[i] > 10):
             pyautogui.moveTo(1156, 818 + i * 50)
             pyautogui.mouseDown()
-            pyautogui.moveTo(765 + index * 300, 541, duration=0.1)
+            pyautogui.moveTo(765 + index * 300, 541, duration=0.35)
             pyautogui.mouseUp()
             saweima_lay = pyautogui.locateOnScreen('E:\\Saweima\\saweima_lay.png', confidence=0.90, region=(1060, 792 + index * 50, 1100-1060, 843-792))
             if(saweima_lay == None):
@@ -247,7 +257,7 @@ into_shop()
 time.sleep(5)
 
 start_day()
-time.sleep(5)
+time.sleep(3)
 
 
 while(True):
